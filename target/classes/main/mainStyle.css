@@ -1,0 +1,10 @@
+.cell {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+.cell-highlight {
+    -fx-background-color:derive(black, 90%);
+}
+.cell-hover-highlight {
+    -fx-background-color:derive(red, 90%);
+}
