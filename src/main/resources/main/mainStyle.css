@@ -1,10 +1,40 @@
+.root {
+    -fx-background-color: saddlebrown;
+}
+
+.radio-button {
+    -fx-text-fill: floralwhite;
+}
+
 .cell {
     -fx-border-color: black;
     -fx-border-width: 1px;
 }
-.cell-highlight {
-    -fx-background-color:derive(black, 90%);
+.cell-wall {
+    -fx-background-color:derive(darkblue, -100%);
 }
-.cell-hover-highlight {
-    -fx-background-color:derive(red, 90%);
+.cell-hover-wall {
+    -fx-background-color:derive(darkblue, 100%);
+}
+
+.cell-start {
+    -fx-background-color:derive(cyan, -50%);
+}
+.cell-hover-start {
+    -fx-background-color:derive(cyan, 70%);
+}
+
+.cell-finish {
+    -fx-background-color:derive(blueviolet, -20%);
+}
+.cell-hover-finish {
+    -fx-background-color:derive(blueviolet, 70%);
+}
+
+.cell-visited {
+    -fx-background-color:derive(white, -50%);
+}
+
+.cell-visited {
+    -fx-background-color:derive(yellow, 0%);
 }

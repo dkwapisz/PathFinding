@@ -1,11 +1,8 @@
 package main;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.PickResult;
 
 public class MouseAction {
 
@@ -35,7 +32,7 @@ public class MouseAction {
         if(event.isPrimaryButtonDown()) {
             cell.highlight();
         } else if( event.isSecondaryButtonDown()) {
-            cell.unhighlight();
+            cell.unHighlight();
         }
     };
 
@@ -53,7 +50,7 @@ public class MouseAction {
         if( event.isPrimaryButtonDown()) {
             cell.highlight();
         } else if( event.isSecondaryButtonDown()) {
-            cell.unhighlight();
+            cell.unHighlight();
         }
 
     };

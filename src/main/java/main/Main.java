@@ -1,12 +1,10 @@
 package main;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -20,19 +18,61 @@ import java.util.Scanner;
 
 public class Main extends Application {
 
-    private int columns = 20;
-    private int rows = 20;
+    private int columns = 50;
+    private int rows = 50;
     private double width = 1200;
     private double height = 800;
+
+    private StackPane root = new StackPane();
+    private Grid grid = new Grid(columns, rows, width - 200, height);
+    private MouseAction mouseAction = new MouseAction();
+    private Button saveButton = new Button("Save");
+    private Button loadButton = new Button("Load");
+    private Button startButton = new Button("START");
+    private static RadioButton wallOption = new RadioButton("Wall ");
+    private static RadioButton startOption = new RadioButton("Start");
+    private static RadioButton finishOption = new RadioButton("Finish");
+    private static boolean startSet;
+    private static boolean finishSet;
+    private ToggleGroup cellOption = new ToggleGroup();
 
     @Override
     public void start(Stage stage) {
 
-        StackPane root = new StackPane();
-        Grid grid = new Grid(columns, rows, width - 200, height);
-        MouseAction mouseAction = new MouseAction();
-        Button saveButton = new Button("Save");
-        Button loadButton = new Button("Load");
+        setButtons();
+
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+
+                Cell cell = new Cell(column, row);
+                mouseAction.makePaintable(cell);
+                grid.add(cell, column, row);
+
+            }
+        }
+
+        root.getChildren().add(grid);
+        root.getChildren().add(saveButton);
+        root.getChildren().add(loadButton);
+        root.getChildren().add(startButton);
+        root.getChildren().add(wallOption);
+        root.getChildren().add(startOption);
+        root.getChildren().add(finishOption);
+
+        // create scene and stage
+        Scene scene = new Scene(root, width, height);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("mainStyle.css")).toExternalForm());
+
+        stage.setScene(scene);
+        stage.show();
+        stage.setResizable(false);
+    }
+
+    private void setButtons() {
+        wallOption.setToggleGroup(cellOption);
+        wallOption.setSelected(true);
+        startOption.setToggleGroup(cellOption);
+        finishOption.setToggleGroup(cellOption);
 
         saveButton.setOnAction(event -> {
             try {
@@ -50,33 +90,24 @@ public class Main extends Application {
             }
         });
 
+        startButton.setOnAction(event -> {
+
+        });
+
         //Button location
         saveButton.translateXProperty().setValue(450);
         saveButton.translateYProperty().setValue(-380);
         loadButton.translateXProperty().setValue(450);
         loadButton.translateYProperty().setValue(-340);
+        wallOption.translateXProperty().setValue(450);
+        wallOption.translateYProperty().setValue(-300);
+        startOption.translateXProperty().setValue(450);
+        startOption.translateYProperty().setValue(-260);
+        finishOption.translateXProperty().setValue(450);
+        finishOption.translateYProperty().setValue(-220);
+        startButton.translateXProperty().setValue(450);
+        startButton.translateYProperty().setValue(-180);
 
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-
-                Cell cell = new Cell(column, row);
-                mouseAction.makePaintable(cell);
-                grid.add(cell, column, row);
-
-            }
-        }
-
-        root.getChildren().add(grid);
-        root.getChildren().add(saveButton);
-        root.getChildren().add(loadButton);
-
-        // create scene and stage
-        Scene scene = new Scene(root, width, height);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("mainStyle.css")).toExternalForm());
-
-        stage.setScene(scene);
-        stage.show();
-        stage.setResizable(false);
     }
 
     private void saveFile(Grid grid) throws IOException {
@@ -86,8 +117,12 @@ public class Main extends Application {
 
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                if (grid.cells[row][column].isWall().equals(Cell.CellState.WALL)) {
+                if (grid.cells[row][column].whichCellType().equals(Cell.CellState.WALL)) {
                     tab[i] = 1;
+                } else if (grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
+                    tab[i] = 2;
+                } else if (grid.cells[row][column].whichCellType().equals(Cell.CellState.FINISH)) {
+                    tab[i] = 3;
                 } else {
                     tab[i] = 0;
                 }
@@ -99,12 +134,12 @@ public class Main extends Application {
         for (int j = 0; j < size; j++) {
             writer.write(tab[j] + System.lineSeparator());
         }
-        writer.write(Arrays.toString(tab));
         writer.close();
     }
 
     private void loadFile(Grid grid) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard.txt"));
+        int actualValue = 0;
 
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
@@ -114,10 +149,16 @@ public class Main extends Application {
                     return;
                 }
 
-                if (Integer.parseInt(scanner.nextLine()) == 1) {
-                    grid.cells[row][column].highlight();
+                actualValue = Integer.parseInt(scanner.nextLine());
+
+                if (actualValue == 1) {
+                    grid.cells[row][column].highlight("wall");
+                } else if (actualValue == 2) {
+                    grid.cells[row][column].highlight("start");
+                } else if (actualValue == 3) {
+                    grid.cells[row][column].highlight("finish");
                 } else {
-                    grid.cells[row][column].unhighlight();
+                    grid.cells[row][column].unHighlight();
                 }
             }
         }
@@ -127,5 +168,29 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static RadioButton getWallOption() {
+        return wallOption;
+    }
+    public static RadioButton getStartOption() {
+        return startOption;
+    }
+    public static RadioButton getFinishOption() {
+        return finishOption;
+    }
+
+    public static boolean isStartSet() {
+        return startSet;
+    }
+    public static boolean isFinishSet() {
+        return finishSet;
+    }
+
+    public static void setStartSet(boolean startSet) {
+        Main.startSet = startSet;
+    }
+    public static void setFinishSet(boolean finishSet) {
+        Main.finishSet = finishSet;
     }
 }

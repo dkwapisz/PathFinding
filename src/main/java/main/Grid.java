@@ -48,11 +48,13 @@ public class Grid extends Pane {
 
     //Unhighlight All Cells
     public void unHighlightAll() {
-        for( int row=0; row < rows; row++) {
-            for( int col=0; col < columns; col++) {
-                cells[row][col].unhighlight();
+        for (int row=0; row < rows; row++) {
+            for (int col=0; col < columns; col++) {
+                cells[row][col].unHighlight();
             }
         }
+        Main.setStartSet(false);
+        Main.setFinishSet(false);
     }
 }
 

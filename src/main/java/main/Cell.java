@@ -19,28 +19,85 @@ public class Cell extends StackPane {
     }
 
     public void highlight() {
-        // ensure the style is only once in the style list
-        getStyleClass().remove("cell-highlight");
-        // add style
-        getStyleClass().add("cell-highlight");
-        cellState = CellState.WALL;
+
+        if (Main.getWallOption().isSelected() && cellState != CellState.START && cellState != CellState.FINISH) {
+            getStyleClass().remove("cell-wall");
+            getStyleClass().add("cell-wall");
+            cellState = CellState.WALL;
+        }
+        if (Main.getStartOption().isSelected() && !Main.isStartSet()) {
+            getStyleClass().remove("cell-start");
+            getStyleClass().add("cell-start");
+            cellState = CellState.START;
+            Main.setStartSet(true);
+        }
+        if (Main.getFinishOption().isSelected() && !Main.isFinishSet()) {
+            getStyleClass().remove("cell-finish");
+            getStyleClass().add("cell-finish");
+            cellState = CellState.FINISH;
+            Main.setFinishSet(true);
+        }
+
     }
 
-    public void unhighlight() {
-        getStyleClass().remove("cell-highlight");
+
+    public void highlight(String cellType) {
+
+        switch (cellType) {
+            case "wall" -> {
+                getStyleClass().remove("cell-wall");
+                getStyleClass().add("cell-wall");
+                cellState = CellState.WALL;
+            }
+            case "start" -> {
+                getStyleClass().remove("cell-start");
+                getStyleClass().add("cell-start");
+                cellState = CellState.START;
+                Main.setStartSet(true);
+            }
+            case "finish" -> {
+                getStyleClass().remove("cell-finish");
+                getStyleClass().add("cell-finish");
+                cellState = CellState.FINISH;
+                Main.setFinishSet(true);
+            }
+        }
+    }
+
+    public void unHighlight() {
+
+        getStyleClass().remove("cell-wall");
+        getStyleClass().remove("cell-start");
+        getStyleClass().remove("cell-finish");
         cellState = CellState.BLANK;
+
     }
 
     public void hoverHighlight() {
-        // ensure the style is only once in the style list
-        getStyleClass().remove("cell-hover-highlight");
 
-        // add style
-        getStyleClass().add("cell-hover-highlight");
+        if (Main.getWallOption().isSelected()) {
+            getStyleClass().remove("cell-hover-wall");
+            getStyleClass().add("cell-hover-wall");
+        } else if (Main.getStartOption().isSelected()) {
+            getStyleClass().remove("cell-hover-start");
+            getStyleClass().add("cell-hover-start");
+        } else {
+            getStyleClass().remove("cell-hover-finish");
+            getStyleClass().add("cell-hover-finish");
+        }
+
     }
 
     public void hoverUnhighlight() {
-        getStyleClass().remove("cell-hover-highlight");
+
+        if (Main.getWallOption().isSelected()) {
+            getStyleClass().remove("cell-hover-wall");
+        } else if (Main.getStartOption().isSelected()) {
+            getStyleClass().remove("cell-hover-start");
+        } else {
+            getStyleClass().remove("cell-hover-finish");
+        }
+
     }
 
     public String toString() {
@@ -53,11 +110,15 @@ public class Cell extends StackPane {
     public int getRow() {
         return row;
     }
-    public CellState isWall() {return cellState;}
+    public CellState whichCellType() {return cellState;}
 
     public enum CellState {
         BLANK,
         WALL,
+        START,
+        FINISH,
+        VISITED,
+        PATH
     }
 }
 
