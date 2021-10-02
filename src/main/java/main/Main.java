@@ -86,7 +86,7 @@ public class Main extends Application {
 
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                if (grid.cells[row][column].isHighlight()) {
+                if (grid.cells[row][column].isWall().equals(Cell.CellState.WALL)) {
                     tab[i] = 1;
                 } else {
                     tab[i] = 0;

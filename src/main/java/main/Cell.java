@@ -6,13 +6,14 @@ public class Cell extends StackPane {
 
     private int column;
     private int row;
-    private boolean highlight;
+    private CellState cellState;
 
     public Cell(int column, int row) {
 
         this.column = column;
         this.row = row;
 
+        cellState = CellState.BLANK;
         getStyleClass().add("cell");
         setOpacity(0.9);
     }
@@ -22,12 +23,12 @@ public class Cell extends StackPane {
         getStyleClass().remove("cell-highlight");
         // add style
         getStyleClass().add("cell-highlight");
-        highlight = true;
+        cellState = CellState.WALL;
     }
 
     public void unhighlight() {
         getStyleClass().remove("cell-highlight");
-        highlight = false;
+        cellState = CellState.BLANK;
     }
 
     public void hoverHighlight() {
@@ -52,8 +53,11 @@ public class Cell extends StackPane {
     public int getRow() {
         return row;
     }
-    public boolean isHighlight() {
-        return highlight;
+    public CellState isWall() {return cellState;}
+
+    public enum CellState {
+        BLANK,
+        WALL,
     }
 }
 
