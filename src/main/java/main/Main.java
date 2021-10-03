@@ -4,34 +4,37 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import main.algorithms.BFS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class Main extends Application {
 
-    private int columns = 50;
-    private int rows = 50;
-    private double width = 1200;
-    private double height = 800;
+    private final static int COLUMNS = 20;
+    private final static int ROWS = 20;
+    private final double WIDTH = 1200;
+    private final double HEIGHT = 800;
 
     private StackPane root = new StackPane();
-    private Grid grid = new Grid(columns, rows, width - 200, height);
+    private Grid grid = new Grid(COLUMNS, ROWS, WIDTH - 200, HEIGHT);
     private MouseAction mouseAction = new MouseAction();
     private Button saveButton = new Button("Save");
     private Button loadButton = new Button("Load");
     private Button startButton = new Button("START");
+    private Button clearButton = new Button("Clear all");
     private static RadioButton wallOption = new RadioButton("Wall ");
     private static RadioButton startOption = new RadioButton("Start");
     private static RadioButton finishOption = new RadioButton("Finish");
+    private static TextField statusField = new TextField("Ready!");
     private static boolean startSet;
     private static boolean finishSet;
     private ToggleGroup cellOption = new ToggleGroup();
@@ -39,12 +42,17 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
-        setButtons();
+        setControls();
 
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
 
                 Cell cell = new Cell(column, row);
+
+                if (row == 0 || column == 0 || row == ROWS - 1 || column == COLUMNS - 1) {
+                    cell.highlight("wall");
+                }
+
                 mouseAction.makePaintable(cell);
                 grid.add(cell, column, row);
 
@@ -55,12 +63,14 @@ public class Main extends Application {
         root.getChildren().add(saveButton);
         root.getChildren().add(loadButton);
         root.getChildren().add(startButton);
+        root.getChildren().add(clearButton);
         root.getChildren().add(wallOption);
         root.getChildren().add(startOption);
         root.getChildren().add(finishOption);
+        root.getChildren().add(statusField);
 
         // create scene and stage
-        Scene scene = new Scene(root, width, height);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("mainStyle.css")).toExternalForm());
 
         stage.setScene(scene);
@@ -68,11 +78,12 @@ public class Main extends Application {
         stage.setResizable(false);
     }
 
-    private void setButtons() {
+    private void setControls() {
         wallOption.setToggleGroup(cellOption);
         wallOption.setSelected(true);
         startOption.setToggleGroup(cellOption);
         finishOption.setToggleGroup(cellOption);
+        statusField.setEditable(false);
 
         saveButton.setOnAction(event -> {
             try {
@@ -91,8 +102,10 @@ public class Main extends Application {
         });
 
         startButton.setOnAction(event -> {
-
+            new BFS();
         });
+
+        clearButton.setOnAction(event -> grid.unHighlightAll());
 
         //Button location
         saveButton.translateXProperty().setValue(450);
@@ -107,6 +120,11 @@ public class Main extends Application {
         finishOption.translateYProperty().setValue(-220);
         startButton.translateXProperty().setValue(450);
         startButton.translateYProperty().setValue(-180);
+        clearButton.translateXProperty().setValue(450);
+        clearButton.translateYProperty().setValue(-140);
+        statusField.translateXProperty().setValue(450);
+        statusField.translateYProperty().setValue(-100);
+        statusField.setMaxSize(100, 20);
 
     }
 
@@ -115,8 +133,8 @@ public class Main extends Application {
         int[] tab = new int[size];
         int i=0;
 
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
                 if (grid.cells[row][column].whichCellType().equals(Cell.CellState.WALL)) {
                     tab[i] = 1;
                 } else if (grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
@@ -141,8 +159,8 @@ public class Main extends Application {
         Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard.txt"));
         int actualValue = 0;
 
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
 
                 if (!scanner.hasNextLine()) {
                     scanner.close();
@@ -179,6 +197,9 @@ public class Main extends Application {
     public static RadioButton getFinishOption() {
         return finishOption;
     }
+    public static TextField getStatusField() {
+        return statusField;
+    }
 
     public static boolean isStartSet() {
         return startSet;
@@ -192,5 +213,12 @@ public class Main extends Application {
     }
     public static void setFinishSet(boolean finishSet) {
         Main.finishSet = finishSet;
+    }
+
+    public static int getCOLUMNS() {
+        return COLUMNS;
+    }
+    public static int getROWS() {
+        return ROWS;
     }
 }

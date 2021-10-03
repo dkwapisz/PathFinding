@@ -4,22 +4,22 @@ import javafx.scene.layout.Pane;
 
 public class Grid extends Pane {
 
-    private int rows;
-    private int columns;
+    private int y;
+    private int x;
 
     private double width;
     private double height;
 
-    Cell[][] cells;
+    public static Cell[][] cells = null;
 
-    public Grid(int columns, int rows, double width, double height) {
+    public Grid(int x, int y, double width, double height) {
 
-        this.columns = columns;
-        this.rows = rows;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
 
-        cells = new Cell[rows][columns];
+        cells = new Cell[x][y];
     }
 
     /**
@@ -27,10 +27,10 @@ public class Grid extends Pane {
      */
     public void add(Cell cell, int column, int row) {
 
-        cells[row][column] = cell;
+        cells[column][row] = cell;
 
-        double w = width / columns;
-        double h = height / rows;
+        double w = width / x;
+        double h = height / y;
         double x = w * column;
         double y = h * row;
 
@@ -48,14 +48,20 @@ public class Grid extends Pane {
 
     //Unhighlight All Cells
     public void unHighlightAll() {
-        for (int row=0; row < rows; row++) {
-            for (int col=0; col < columns; col++) {
-                cells[row][col].unHighlight();
+        for (int row = 0; row < y; row++) {
+            for (int column = 0; column < x; column++) {
+                if (!(row == 0 || column == 0 || row == y - 1 || column == x - 1)) {
+                    cells[row][column].unHighlight();
+                }
             }
         }
+
+        Main.getStatusField().setText("Cleared!");
         Main.setStartSet(false);
         Main.setFinishSet(false);
     }
+
+
 }
 
 

@@ -4,14 +4,14 @@ import javafx.scene.layout.StackPane;
 
 public class Cell extends StackPane {
 
-    private int column;
-    private int row;
+    private int y;
+    private int x;
     private CellState cellState;
 
-    public Cell(int column, int row) {
+    public Cell(int x, int y) {
 
-        this.column = column;
-        this.row = row;
+        this.y = y;
+        this.x = x;
 
         cellState = CellState.BLANK;
         getStyleClass().add("cell");
@@ -20,22 +20,24 @@ public class Cell extends StackPane {
 
     public void highlight() {
 
-        if (Main.getWallOption().isSelected() && cellState != CellState.START && cellState != CellState.FINISH) {
-            getStyleClass().remove("cell-wall");
-            getStyleClass().add("cell-wall");
-            cellState = CellState.WALL;
-        }
-        if (Main.getStartOption().isSelected() && !Main.isStartSet()) {
-            getStyleClass().remove("cell-start");
-            getStyleClass().add("cell-start");
-            cellState = CellState.START;
-            Main.setStartSet(true);
-        }
-        if (Main.getFinishOption().isSelected() && !Main.isFinishSet()) {
-            getStyleClass().remove("cell-finish");
-            getStyleClass().add("cell-finish");
-            cellState = CellState.FINISH;
-            Main.setFinishSet(true);
+        if (!(y == 0 || x == 0 || y == Main.getROWS() - 1 || x == Main.getCOLUMNS() - 1)) {
+            if (Main.getWallOption().isSelected() && cellState != CellState.START && cellState != CellState.FINISH) {
+                getStyleClass().remove("cell-wall");
+                getStyleClass().add("cell-wall");
+                cellState = CellState.WALL;
+            }
+            if (Main.getStartOption().isSelected() && !Main.isStartSet()) {
+                getStyleClass().remove("cell-start");
+                getStyleClass().add("cell-start");
+                cellState = CellState.START;
+                Main.setStartSet(true);
+            }
+            if (Main.getFinishOption().isSelected() && !Main.isFinishSet()) {
+                getStyleClass().remove("cell-finish");
+                getStyleClass().add("cell-finish");
+                cellState = CellState.FINISH;
+                Main.setFinishSet(true);
+            }
         }
 
     }
@@ -66,11 +68,26 @@ public class Cell extends StackPane {
 
     public void unHighlight() {
 
-        getStyleClass().remove("cell-wall");
-        getStyleClass().remove("cell-start");
-        getStyleClass().remove("cell-finish");
-        cellState = CellState.BLANK;
+        if (!(y == 0 || x == 0 || y == Main.getROWS() - 1 || x == Main.getCOLUMNS() - 1)) {
+            getStyleClass().remove("cell-wall");
+            getStyleClass().remove("cell-start");
+            getStyleClass().remove("cell-finish");
+            getStyleClass().remove("cell-visited");
 
+            if (cellState == CellState.START) {
+                Main.setStartSet(false);
+            } else if (cellState == CellState.FINISH) {
+                Main.setFinishSet(false);
+            }
+
+            cellState = CellState.BLANK;
+        }
+
+    }
+
+    public void highlightSearch() {
+        getStyleClass().remove("cell-visited");
+        getStyleClass().add("cell-visited");
     }
 
     public void hoverHighlight() {
@@ -101,14 +118,14 @@ public class Cell extends StackPane {
     }
 
     public String toString() {
-        return this.column + "/" + this.row;
+        return this.x + "/" + this.y;
     }
 
-    public int getColumn() {
-        return column;
+    public int getX() {
+        return x;
     }
-    public int getRow() {
-        return row;
+    public int getY() {
+        return y;
     }
     public CellState whichCellType() {return cellState;}
 

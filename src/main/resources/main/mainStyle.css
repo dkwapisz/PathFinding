@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: saddlebrown;
+    -fx-background-color: dimgrey;
 }
 
 .radio-button {
@@ -32,9 +32,9 @@
 }
 
 .cell-visited {
-    -fx-background-color:derive(white, -50%);
+    -fx-background-color:derive(white, 0%);
 }
 
-.cell-visited {
-    -fx-background-color:derive(yellow, 0%);
+.cell-path {
+    -fx-background-color:derive(red, 0%);
 }
