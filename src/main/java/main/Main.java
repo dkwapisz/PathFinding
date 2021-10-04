@@ -19,8 +19,8 @@ import java.util.Scanner;
 
 public class Main extends Application {
 
-    private final static int COLUMNS = 50;
-    private final static int ROWS = 50;
+    private final static int COLUMNS = 30;
+    private final static int ROWS = 30;
     private final double WIDTH = 1200;
     private final double HEIGHT = 800;
 
@@ -105,7 +105,10 @@ public class Main extends Application {
             new BFS();
         });
 
-        clearButton.setOnAction(event -> grid.unHighlightAll());
+        clearButton.setOnAction(event -> {
+            if (BFS.getTimelineFinding() != null) BFS.getTimelineFinding().stop();
+            grid.unHighlightAll();
+        });
 
         //Button location
         saveButton.translateXProperty().setValue(450);
@@ -157,7 +160,7 @@ public class Main extends Application {
 
     private void loadFile(Grid grid) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard.txt"));
-        int actualValue = 0;
+        int actualValue;
 
         for (int row = 0; row < ROWS; row++) {
             for (int column = 0; column < COLUMNS; column++) {

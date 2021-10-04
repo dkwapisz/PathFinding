@@ -73,6 +73,7 @@ public class Cell extends StackPane {
             getStyleClass().remove("cell-start");
             getStyleClass().remove("cell-finish");
             getStyleClass().remove("cell-visited");
+            getStyleClass().remove("cell-path");
 
             if (cellState == CellState.START) {
                 Main.setStartSet(false);
@@ -88,6 +89,11 @@ public class Cell extends StackPane {
     public void highlightSearch() {
         getStyleClass().remove("cell-visited");
         getStyleClass().add("cell-visited");
+    }
+
+    public void highlightPath() {
+        getStyleClass().remove("cell-path");
+        getStyleClass().add("cell-path");
     }
 
     public void hoverHighlight() {

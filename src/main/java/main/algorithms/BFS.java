@@ -7,20 +7,22 @@ import main.Cell;
 import main.Grid;
 import main.Main;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class BFS {
 
     private int[][] arrayGrid;
     private int sourceX;
     private int sourceY;
+    private int destX;
+    private int destY;
     private int searchX = -1;
     private int searchY = -1;
-    private Timeline timeline;
+    private static Timeline timelineFinding;
+    private static Timeline timelinePath;
+    private int pathIterator = 2;
     private int dots = 0;
+    private List<Node> nodeList = new ArrayList<>();
 
     public BFS() {
         arrayGrid = new int[Main.getCOLUMNS()][Main.getROWS()];
@@ -29,7 +31,7 @@ public class BFS {
     }
 
     private void refreshGrid() {
-        if (searchX > 0 && searchY > 0 && searchX != sourceX && searchY != sourceY) {
+        if (searchX > 0 && searchY > 0 && (searchX != sourceX || searchY != sourceY)) {
             Grid.cells[searchY][searchX].highlightSearch();
         }
     }
@@ -42,7 +44,10 @@ public class BFS {
                 } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
                     sourceX = column;
                     sourceY = row;
+                    arrayGrid[column][row] = 2;
                 } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.FINISH)) {
+                    destX = column;
+                    destY = row;
                     arrayGrid[column][row] = 3;
                 } else {
                     arrayGrid[column][row] = 0;
@@ -50,54 +55,74 @@ public class BFS {
             }
         }
     }
-    private void pathExists(int[][] matrix) {
+    private void pathExists(int[][] arrayGrid) {
 
-        Node source = new Node(sourceX, sourceY, 0);
+        Node source = new Node(sourceX, sourceY, 0, sourceX, sourceY);
         Queue<Node> queue = new LinkedList<>();
 
         queue.add(source);
 
-        timeline = new Timeline(new KeyFrame(Duration.millis(5), e -> queue(queue, matrix)));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        timelineFinding = new Timeline(new KeyFrame(Duration.millis(15), e -> queue(queue, arrayGrid)));
+        timelineFinding.setCycleCount(Timeline.INDEFINITE);
+        timelineFinding.play();
+
+
     }
 
-    private void queue(Queue<Node> queue, int[][] matrix) {
+    private void queue(Queue<Node> queue, int[][] arrayGrid) {
+
         if (!queue.isEmpty()) {
             Node poped = queue.poll();
+
             textFieldUpdate();
-            if (matrix[poped.x][poped.y] != 3) {
-                matrix[poped.x][poped.y] = 1;
+            if (arrayGrid[poped.x][poped.y] != 3) {
+                arrayGrid[poped.x][poped.y] = 1;
                 searchX = poped.x;
                 searchY = poped.y;
                 refreshGrid();
                 List<Node> neighbourList = addNeighbours(poped, arrayGrid);
                 queue.addAll(neighbourList);
-            } else if (matrix[poped.x][poped.y] == 3) {
+            } else if (arrayGrid[poped.x][poped.y] == 3) {
                 Main.getStatusField().setText("Path found!");
-                timeline.stop();
+                List<Integer> path = findPath(poped.distanceFromSource);
+                timelineFinding.stop();
+
+                timelinePath = new Timeline(new KeyFrame(Duration.millis(15), e -> printPath(path, poped.distanceFromSource)));
+                timelinePath.setCycleCount(Timeline.INDEFINITE);
+                timelinePath.play();
             }
         } else {
             Main.getStatusField().setText("No path!");
-            timeline.stop();
+            timelineFinding.stop();
         }
     }
 
     private List<Node> addNeighbours(Node poped, int[][] arrayGrid) {
 
         List<Node> list = new LinkedList<>();
-
         if ((poped.x-1 > 0 && poped.x-1 < arrayGrid.length) && arrayGrid[poped.x-1][poped.y] != 1) {
-            list.add(new Node(poped.x-1, poped.y, poped.distanceFromSource+1));
+            Node nextNode = new Node(poped.x-1, poped.y, poped.distanceFromSource+1, poped.x, poped.y);
+
+            list.add(nextNode);
+            nodeList.add(nextNode);
         }
         if ((poped.x+1 > 0 && poped.x+1 < arrayGrid.length) && arrayGrid[poped.x+1][poped.y] != 1) {
-            list.add(new Node(poped.x+1, poped.y, poped.distanceFromSource+1));
+            Node nextNode = new Node(poped.x+1, poped.y, poped.distanceFromSource+1, poped.x, poped.y);
+
+            list.add(nextNode);
+            nodeList.add(nextNode);
         }
         if ((poped.y-1 > 0 && poped.y-1 < arrayGrid.length) && arrayGrid[poped.x][poped.y-1] != 1) {
-            list.add(new Node(poped.x, poped.y-1, poped.distanceFromSource+1));
+            Node nextNode = new Node(poped.x, poped.y-1, poped.distanceFromSource+1, poped.x, poped.y);
+
+            list.add(nextNode);
+            nodeList.add(nextNode);
         }
         if ((poped.y+1 > 0 && poped.y+1 < arrayGrid.length) && arrayGrid[poped.x][poped.y+1] != 1) {
-            list.add(new Node(poped.x, poped.y+1, poped.distanceFromSource+1));
+            Node nextNode = new Node(poped.x, poped.y+1, poped.distanceFromSource+1, poped.x, poped.y);
+
+            list.add(nextNode);
+            nodeList.add(nextNode);
         }
 
         return list;
@@ -115,15 +140,56 @@ public class BFS {
             dots = 0;
         }
     }
+
+    private List<Integer> findPath(int distance) {
+
+        List<Integer> path = new ArrayList<>();
+        int lastX = destX;
+        int lastY = destY;
+
+        for (int i = 0; i < distance; i++) {
+            for (Node node : nodeList) {
+                if (node.x == lastX && node.y == lastY) {
+                    path.add(node.path.get(0));
+                    path.add(node.path.get(1));
+                    lastX = node.path.get(0);
+                    lastY = node.path.get(1);
+                    break;
+                }
+            }
+        }
+
+        Collections.reverse(path);
+
+        return path;
+    }
+
+    private void printPath(List<Integer> path, int distance) {
+        if (pathIterator < distance*2) {
+            Grid.cells[path.get(pathIterator)][path.get(pathIterator+1)].highlightPath();
+            pathIterator += 2;
+        }
+
+    }
+
+    public static Timeline getTimelineFinding() {
+        return timelineFinding;
+    }
 }
+
+
 class Node {
     int x;
     int y;
     int distanceFromSource;
+    List<Integer> path = new ArrayList<>();
 
-    Node(int x, int y, int dis) {
+    Node(int x, int y, int dist, int lastX, int lastY) {
         this.x = x;
         this.y = y;
-        this.distanceFromSource = dis;
+        path.add(lastX);
+        path.add(lastY);
+        this.distanceFromSource = dist;
     }
+
 }
