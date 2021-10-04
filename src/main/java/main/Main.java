@@ -24,20 +24,20 @@ public class Main extends Application {
     private final double WIDTH = 1200;
     private final double HEIGHT = 800;
 
-    private StackPane root = new StackPane();
-    private Grid grid = new Grid(COLUMNS, ROWS, WIDTH - 200, HEIGHT);
-    private MouseAction mouseAction = new MouseAction();
-    private Button saveButton = new Button("Save");
-    private Button loadButton = new Button("Load");
-    private Button startButton = new Button("START");
-    private Button clearButton = new Button("Clear all");
-    private static RadioButton wallOption = new RadioButton("Wall ");
-    private static RadioButton startOption = new RadioButton("Start");
-    private static RadioButton finishOption = new RadioButton("Finish");
-    private static TextField statusField = new TextField("Ready!");
+    private final StackPane root = new StackPane();
+    private final Grid grid = new Grid(COLUMNS, ROWS, WIDTH - 200, HEIGHT);
+    private final MouseAction mouseAction = new MouseAction();
+    private final Button saveButton = new Button("Save");
+    private final Button loadButton = new Button("Load");
+    private final Button startButton = new Button("START");
+    private final Button clearButton = new Button("Clear all");
+    private static final RadioButton wallOption = new RadioButton("Wall ");
+    private static final RadioButton startOption = new RadioButton("Start");
+    private static final RadioButton finishOption = new RadioButton("Finish");
+    private static final TextField statusField = new TextField("Ready!");
     private static boolean startSet;
     private static boolean finishSet;
-    private ToggleGroup cellOption = new ToggleGroup();
+    private final ToggleGroup cellOption = new ToggleGroup();
 
     @Override
     public void start(Stage stage) {
@@ -87,7 +87,7 @@ public class Main extends Application {
 
         saveButton.setOnAction(event -> {
             try {
-                saveFile(grid);
+                saveFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -95,18 +95,16 @@ public class Main extends Application {
 
         loadButton.setOnAction(event -> {
             try {
-                loadFile(grid);
+                loadFile();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         });
 
-        startButton.setOnAction(event -> {
-            new BFS();
-        });
+        startButton.setOnAction(event -> new BFS());
 
         clearButton.setOnAction(event -> {
-            if (BFS.getTimelineFinding() != null) BFS.getTimelineFinding().stop();
+            BFS.stopTimelines();
             grid.unHighlightAll();
         });
 
@@ -131,18 +129,18 @@ public class Main extends Application {
 
     }
 
-    private void saveFile(Grid grid) throws IOException {
-        int size = grid.cells.length*grid.cells[0].length;
+    private void saveFile() throws IOException {
+        int size = Grid.cells.length*Grid.cells[0].length;
         int[] tab = new int[size];
         int i=0;
 
         for (int row = 0; row < ROWS; row++) {
             for (int column = 0; column < COLUMNS; column++) {
-                if (grid.cells[row][column].whichCellType().equals(Cell.CellState.WALL)) {
+                if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.WALL)) {
                     tab[i] = 1;
-                } else if (grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
+                } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
                     tab[i] = 2;
-                } else if (grid.cells[row][column].whichCellType().equals(Cell.CellState.FINISH)) {
+                } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.FINISH)) {
                     tab[i] = 3;
                 } else {
                     tab[i] = 0;
@@ -158,7 +156,7 @@ public class Main extends Application {
         writer.close();
     }
 
-    private void loadFile(Grid grid) throws FileNotFoundException {
+    private void loadFile() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard.txt"));
         int actualValue;
 
@@ -173,13 +171,13 @@ public class Main extends Application {
                 actualValue = Integer.parseInt(scanner.nextLine());
 
                 if (actualValue == 1) {
-                    grid.cells[row][column].highlight("wall");
+                    Grid.cells[row][column].highlight("wall");
                 } else if (actualValue == 2) {
-                    grid.cells[row][column].highlight("start");
+                    Grid.cells[row][column].highlight("start");
                 } else if (actualValue == 3) {
-                    grid.cells[row][column].highlight("finish");
+                    Grid.cells[row][column].highlight("finish");
                 } else {
-                    grid.cells[row][column].unHighlight();
+                    Grid.cells[row][column].unHighlight();
                 }
             }
         }

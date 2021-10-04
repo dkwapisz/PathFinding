@@ -4,11 +4,11 @@ import javafx.scene.layout.Pane;
 
 public class Grid extends Pane {
 
-    private int y;
-    private int x;
+    private final int y;
+    private final int x;
 
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
 
     public static Cell[][] cells = null;
 
@@ -40,10 +40,6 @@ public class Grid extends Pane {
         cell.setPrefHeight(h);
 
         getChildren().add(cell);
-    }
-
-    public Cell getCell(int column, int row) {
-        return cells[row][column];
     }
 
     //Unhighlight All Cells

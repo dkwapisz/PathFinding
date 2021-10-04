@@ -11,7 +11,7 @@ import java.util.*;
 
 public class BFS {
 
-    private int[][] arrayGrid;
+    private final int[][] arrayGrid;
     private int sourceX;
     private int sourceY;
     private int destX;
@@ -22,7 +22,7 @@ public class BFS {
     private static Timeline timelinePath;
     private int pathIterator = 2;
     private int dots = 0;
-    private List<Node> nodeList = new ArrayList<>();
+    private final List<Node> nodeList = new ArrayList<>();
 
     public BFS() {
         arrayGrid = new int[Main.getCOLUMNS()][Main.getROWS()];
@@ -168,12 +168,18 @@ public class BFS {
         if (pathIterator < distance*2) {
             Grid.cells[path.get(pathIterator)][path.get(pathIterator+1)].highlightPath();
             pathIterator += 2;
+        } else {
+            timelinePath.stop();
         }
-
     }
 
-    public static Timeline getTimelineFinding() {
-        return timelineFinding;
+    public static void stopTimelines() {
+        if (timelinePath != null) {
+            timelinePath.stop();
+        }
+        if (timelineFinding != null) {
+            timelineFinding.stop();
+        }
     }
 }
 

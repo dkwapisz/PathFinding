@@ -4,8 +4,8 @@ import javafx.scene.layout.StackPane;
 
 public class Cell extends StackPane {
 
-    private int y;
-    private int x;
+    private final int y;
+    private final int x;
     private CellState cellState;
 
     public Cell(int x, int y) {
@@ -127,12 +127,6 @@ public class Cell extends StackPane {
         return this.x + "/" + this.y;
     }
 
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
     public CellState whichCellType() {return cellState;}
 
     public enum CellState {
@@ -140,8 +134,6 @@ public class Cell extends StackPane {
         WALL,
         START,
         FINISH,
-        VISITED,
-        PATH
     }
 }
 
