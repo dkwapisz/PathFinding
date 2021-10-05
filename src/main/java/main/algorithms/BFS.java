@@ -3,19 +3,14 @@ package main.algorithms;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import main.Cell;
 import main.Grid;
 import main.Main;
 
 import java.util.*;
 
-public class BFS {
+public class BFS extends Algorithm{
 
-    private final int[][] arrayGrid;
-    private int sourceX;
-    private int sourceY;
-    private int destX;
-    private int destY;
+
     private int searchX = -1;
     private int searchY = -1;
     private static Timeline timelineFinding;
@@ -25,39 +20,18 @@ public class BFS {
     private final List<Node> nodeList = new ArrayList<>();
 
     public BFS() {
-        arrayGrid = new int[Main.getCOLUMNS()][Main.getROWS()];
-        makeArrayGrid();
-        pathExists(arrayGrid);
+        pathExists(getArrayGrid());
     }
 
     private void refreshGrid() {
-        if (searchX > 0 && searchY > 0 && (searchX != sourceX || searchY != sourceY)) {
+        if (searchX > 0 && searchY > 0 && (searchX != getSourceX() || searchY != getSourceY())) {
             Grid.cells[searchY][searchX].highlightSearch();
         }
     }
 
-    private void makeArrayGrid() {
-        for (int row = 0; row < Main.getROWS(); row++) {
-            for (int column = 0; column < Main.getCOLUMNS(); column++) {
-                if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.WALL)) {
-                    arrayGrid[column][row] = 1;
-                } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.START)) {
-                    sourceX = column;
-                    sourceY = row;
-                    arrayGrid[column][row] = 2;
-                } else if (Grid.cells[row][column].whichCellType().equals(Cell.CellState.FINISH)) {
-                    destX = column;
-                    destY = row;
-                    arrayGrid[column][row] = 3;
-                } else {
-                    arrayGrid[column][row] = 0;
-                }
-            }
-        }
-    }
     private void pathExists(int[][] arrayGrid) {
 
-        Node source = new Node(sourceX, sourceY, 0, sourceX, sourceY);
+        Node source = new Node(getSourceX(), getSourceY(), 0, getSourceX(), getSourceY());
         Queue<Node> queue = new LinkedList<>();
 
         queue.add(source);
@@ -144,8 +118,8 @@ public class BFS {
     private List<Integer> findPath(int distance) {
 
         List<Integer> path = new ArrayList<>();
-        int lastX = destX;
-        int lastY = destY;
+        int lastX = getDestX();
+        int lastY = getDestY();
 
         for (int i = 0; i < distance; i++) {
             for (Node node : nodeList) {
@@ -181,21 +155,4 @@ public class BFS {
             timelineFinding.stop();
         }
     }
-}
-
-
-class Node {
-    int x;
-    int y;
-    int distanceFromSource;
-    List<Integer> path = new ArrayList<>();
-
-    Node(int x, int y, int dist, int lastX, int lastY) {
-        this.x = x;
-        this.y = y;
-        path.add(lastX);
-        path.add(lastY);
-        this.distanceFromSource = dist;
-    }
-
 }

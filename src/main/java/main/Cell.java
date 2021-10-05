@@ -123,10 +123,6 @@ public class Cell extends StackPane {
 
     }
 
-    public String toString() {
-        return this.x + "/" + this.y;
-    }
-
     public CellState whichCellType() {return cellState;}
 
     public enum CellState {

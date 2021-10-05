@@ -22,9 +22,6 @@ public class Grid extends Pane {
         cells = new Cell[x][y];
     }
 
-    /**
-     * Add cell to array and to the UI.
-     */
     public void add(Cell cell, int column, int row) {
 
         cells[column][row] = cell;
@@ -56,7 +53,6 @@ public class Grid extends Pane {
         Main.setStartSet(false);
         Main.setFinishSet(false);
     }
-
 
 }
 
