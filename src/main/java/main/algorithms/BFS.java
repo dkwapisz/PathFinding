@@ -10,7 +10,6 @@ import java.util.*;
 
 public class BFS extends Algorithm{
 
-
     private int searchX = -1;
     private int searchY = -1;
     private static Timeline timelineFinding;
@@ -30,7 +29,6 @@ public class BFS extends Algorithm{
     }
 
     private void pathExists(int[][] arrayGrid) {
-
         Node source = new Node(getSourceX(), getSourceY(), 0, getSourceX(), getSourceY());
         Queue<Node> queue = new LinkedList<>();
 
@@ -39,12 +37,9 @@ public class BFS extends Algorithm{
         timelineFinding = new Timeline(new KeyFrame(Duration.millis(15), e -> queue(queue, arrayGrid)));
         timelineFinding.setCycleCount(Timeline.INDEFINITE);
         timelineFinding.play();
-
-
     }
 
     private void queue(Queue<Node> queue, int[][] arrayGrid) {
-
         if (!queue.isEmpty()) {
             Node poped = queue.poll();
 
@@ -72,7 +67,6 @@ public class BFS extends Algorithm{
     }
 
     private List<Node> addNeighbours(Node poped, int[][] arrayGrid) {
-
         List<Node> list = new LinkedList<>();
         if ((poped.x-1 > 0 && poped.x-1 < arrayGrid.length) && arrayGrid[poped.x-1][poped.y] != 1) {
             Node nextNode = new Node(poped.x-1, poped.y, poped.distanceFromSource+1, poped.x, poped.y);
@@ -116,7 +110,6 @@ public class BFS extends Algorithm{
     }
 
     private List<Integer> findPath(int distance) {
-
         List<Integer> path = new ArrayList<>();
         int lastX = getDestX();
         int lastY = getDestY();
