@@ -17,8 +17,8 @@ import java.util.Scanner;
 
 public class Main extends Application {
 
-    private final static int COLUMNS = 30;
-    private final static int ROWS = 30;
+    private final static int COLUMNS = 10;
+    private final static int ROWS = 10;
     private final double WIDTH = 1200;
     private final double HEIGHT = 900;
 

@@ -9,7 +9,6 @@ public class Cell extends StackPane {
     private CellState cellState;
 
     public Cell(int x, int y) {
-
         this.y = y;
         this.x = x;
 
@@ -19,7 +18,6 @@ public class Cell extends StackPane {
     }
 
     public void highlight() {
-
         if (!(y == 0 || x == 0 || y == Main.getROWS() - 1 || x == Main.getCOLUMNS() - 1)) {
             if (Main.getWallOption().isSelected() && cellState != CellState.START && cellState != CellState.FINISH) {
                 getStyleClass().remove("cell-wall");
@@ -39,12 +37,10 @@ public class Cell extends StackPane {
                 Main.setFinishSet(true);
             }
         }
-
     }
 
 
     public void highlight(String cellType) {
-
         switch (cellType) {
             case "wall" -> {
                 getStyleClass().remove("cell-wall");
@@ -67,7 +63,6 @@ public class Cell extends StackPane {
     }
 
     public void unHighlight() {
-
         if (!(y == 0 || x == 0 || y == Main.getROWS() - 1 || x == Main.getCOLUMNS() - 1)) {
             getStyleClass().remove("cell-wall");
             getStyleClass().remove("cell-start");
@@ -83,7 +78,6 @@ public class Cell extends StackPane {
 
             cellState = CellState.BLANK;
         }
-
     }
 
     public void highlightSearch() {
@@ -97,7 +91,6 @@ public class Cell extends StackPane {
     }
 
     public void hoverHighlight() {
-
         if (Main.getWallOption().isSelected()) {
             getStyleClass().remove("cell-hover-wall");
             getStyleClass().add("cell-hover-wall");
@@ -108,11 +101,9 @@ public class Cell extends StackPane {
             getStyleClass().remove("cell-hover-finish");
             getStyleClass().add("cell-hover-finish");
         }
-
     }
 
     public void hoverUnhighlight() {
-
         if (Main.getWallOption().isSelected()) {
             getStyleClass().remove("cell-hover-wall");
         } else if (Main.getStartOption().isSelected()) {
@@ -120,7 +111,6 @@ public class Cell extends StackPane {
         } else {
             getStyleClass().remove("cell-hover-finish");
         }
-
     }
 
     public CellState whichCellType() {return cellState;}

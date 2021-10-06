@@ -13,7 +13,6 @@ public class Grid extends Pane {
     public static Cell[][] cells = null;
 
     public Grid(int x, int y, double width, double height) {
-
         this.x = x;
         this.y = y;
         this.width = width;
@@ -23,7 +22,6 @@ public class Grid extends Pane {
     }
 
     public void add(Cell cell, int column, int row) {
-
         cells[column][row] = cell;
 
         double w = width / x;
