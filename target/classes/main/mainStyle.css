@@ -1,9 +1,74 @@
 .root {
-    -fx-background-color: dimgrey;
+    -fx-background-color: #606060;
 }
 
 .radio-button {
     -fx-text-fill: floralwhite;
+    -fx-min-width: 100;
+    -fx-min-height: 40;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1);
+}
+
+.button, .combo-box, .text-field {
+    -fx-min-width: 125;
+    -fx-min-height: 40;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#6c6c6c, #414040);
+    -fx-text-fill: floralwhite;
+    -fx-effect: dropshadow(three-pass-box , rgba(0,0,0,0.6), 5, 0.0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#414040, #6c6c6c);
+}
+
+#saveButton {
+    -fx-translate-x: 500;
+    -fx-translate-y: -400;
+}
+
+#loadButton {
+    -fx-translate-x: 500;
+    -fx-translate-y: -350;
+}
+
+#wallOption {
+    -fx-translate-x: 500;
+    -fx-translate-y: -300;
+}
+
+#startOption {
+    -fx-translate-x: 500;
+    -fx-translate-y: -270;
+}
+
+#finishOption {
+    -fx-translate-x: 500;
+    -fx-translate-y: -240;
+}
+
+#statusField {
+    -fx-translate-x: 500;
+    -fx-translate-y: -190;
+    -fx-max-width: 60;
+    -fx-max-height: 30;
+}
+
+#algorithmType{
+    -fx-translate-x: 500;
+    -fx-translate-y: -140;
+}
+
+#startButton {
+    -fx-translate-x: 500;
+    -fx-translate-y: -90;
+}
+
+#clearButton {
+    -fx-translate-x: 500;
+    -fx-translate-y: -40;
 }
 
 .cell {

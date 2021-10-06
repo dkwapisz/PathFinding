@@ -20,7 +20,7 @@ public class Main extends Application {
     private final static int COLUMNS = 30;
     private final static int ROWS = 30;
     private final double WIDTH = 1200;
-    private final double HEIGHT = 800;
+    private final double HEIGHT = 900;
 
     private final StackPane root = new StackPane();
     private final Grid grid = new Grid(COLUMNS, ROWS, WIDTH - 200, HEIGHT);
@@ -68,7 +68,6 @@ public class Main extends Application {
         root.getChildren().add(statusField);
         root.getChildren().add(algorithmType);
 
-        // create scene and stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("mainStyle.css")).toExternalForm());
 
@@ -119,26 +118,16 @@ public class Main extends Application {
             grid.unHighlightAll();
         });
 
-        //Button location
-        saveButton.translateXProperty().setValue(450);
-        saveButton.translateYProperty().setValue(-380);
-        loadButton.translateXProperty().setValue(450);
-        loadButton.translateYProperty().setValue(-340);
-        wallOption.translateXProperty().setValue(450);
-        wallOption.translateYProperty().setValue(-300);
-        startOption.translateXProperty().setValue(450);
-        startOption.translateYProperty().setValue(-260);
-        finishOption.translateXProperty().setValue(450);
-        finishOption.translateYProperty().setValue(-220);
-        startButton.translateXProperty().setValue(450);
-        startButton.translateYProperty().setValue(-180);
-        clearButton.translateXProperty().setValue(450);
-        clearButton.translateYProperty().setValue(-140);
-        statusField.translateXProperty().setValue(450);
-        statusField.translateYProperty().setValue(-100);
-        statusField.setMaxSize(100, 20);
-        algorithmType.translateXProperty().setValue(450);
-        algorithmType.translateYProperty().setValue(-60);
+        saveButton.setId("saveButton");
+        loadButton.setId("loadButton");
+        wallOption.setId("wallOption");
+        startOption.setId("startOption");
+        finishOption.setId("finishOption");
+        statusField.setId("statusField");
+        algorithmType.setId("algorithmType");
+        startButton.setId("startButton");
+        clearButton.setId("clearButton");
+
     }
 
     private void saveFile() throws IOException {
@@ -161,7 +150,7 @@ public class Main extends Application {
             }
         }
 
-        FileWriter writer = new FileWriter("src/main/resources/main/savedBoard.txt");
+        FileWriter writer = new FileWriter("src/main/resources/main/savedBoard" + ROWS + ".txt");
         for (int j = 0; j < size; j++) {
             writer.write(tab[j] + System.lineSeparator());
         }
@@ -169,7 +158,7 @@ public class Main extends Application {
     }
 
     private void loadFile() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard.txt"));
+        Scanner scanner = new Scanner(new File("src/main/resources/main/savedBoard" + ROWS + ".txt"));
         int actualValue;
 
         for (int row = 0; row < ROWS; row++) {
