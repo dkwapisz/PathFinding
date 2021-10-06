@@ -2,13 +2,11 @@ package main;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import main.algorithms.BFS;
+import main.algorithms.Dijkstra;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,13 +33,13 @@ public class Main extends Application {
     private static final RadioButton startOption = new RadioButton("Start");
     private static final RadioButton finishOption = new RadioButton("Finish");
     private static final TextField statusField = new TextField("Ready!");
+    private static final ComboBox algorithmType = new ComboBox();
     private static boolean startSet;
     private static boolean finishSet;
     private final ToggleGroup cellOption = new ToggleGroup();
 
     @Override
     public void start(Stage stage) {
-
         setControls();
 
         for (int row = 0; row < ROWS; row++) {
@@ -68,6 +66,7 @@ public class Main extends Application {
         root.getChildren().add(startOption);
         root.getChildren().add(finishOption);
         root.getChildren().add(statusField);
+        root.getChildren().add(algorithmType);
 
         // create scene and stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -75,7 +74,7 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.show();
-        stage.setResizable(false);
+        stage.setResizable(true);
     }
 
     private void setControls() {
@@ -84,6 +83,7 @@ public class Main extends Application {
         startOption.setToggleGroup(cellOption);
         finishOption.setToggleGroup(cellOption);
         statusField.setEditable(false);
+        algorithmType.getItems().addAll("BFS", "Dijkstra");
 
         saveButton.setOnAction(event -> {
             try {
@@ -101,7 +101,18 @@ public class Main extends Application {
             }
         });
 
-        startButton.setOnAction(event -> new BFS());
+        startButton.setOnAction(event -> {
+            if (algorithmType.getValue() != null) {
+                if (algorithmType.getValue().equals("BFS")) {
+                    new BFS();
+                } else if (algorithmType.getValue().equals("Dijkstra")) {
+                    new Dijkstra();
+                }
+            } else {
+                statusField.setText("Choose type!");
+            }
+
+        });
 
         clearButton.setOnAction(event -> {
             BFS.stopTimelines();
@@ -126,7 +137,8 @@ public class Main extends Application {
         statusField.translateXProperty().setValue(450);
         statusField.translateYProperty().setValue(-100);
         statusField.setMaxSize(100, 20);
-
+        algorithmType.translateXProperty().setValue(450);
+        algorithmType.translateYProperty().setValue(-60);
     }
 
     private void saveFile() throws IOException {
