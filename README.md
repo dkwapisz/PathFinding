@@ -1,2 +1,2 @@
-# PathFinding
+# Path Finding
 > PathFinding algorithms visualization
